@@ -198,4 +198,25 @@ class BeamParsedown extends ParsedownExtra
     {
         return $block;
     }
+
+    protected $baseImagePath = '';
+
+    public function setBaseImagePath($url)
+    {
+        $this->baseImagePath = $url;
+    }
+
+    protected function inlineImage($excerpt)
+    {
+        $image = parent::inlineImage($excerpt);
+
+        if ( ! isset($image))
+        {
+            return null;
+        }
+
+        $image['element']['attributes']['src'] = $this->baseImagePath . '/' . $image['element']['attributes']['src'];
+
+        return $image;
+    }
 }
