@@ -11,7 +11,7 @@
         "homepage": "https://mybeam.me"
     }],
     "require": {
-        "erusev/parsedown-extra": "0.8.1"
+        "erusev/parsedown-extra": "^0.8.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5.0"
