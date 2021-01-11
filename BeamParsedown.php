@@ -29,16 +29,17 @@ class BeamParsedown extends ParsedownExtra
 			throw new Exception('BeamParsedown requires a later version of ParsedownExtra');
 		}
 
-		$this->InlineTypes['i'][] = 'Icon';
-        $this->inlineMarkerList .= 'i';
+		$this->InlineTypes['['][] = 'Icon';
 
-        $this->BlockTypes['i'][] = 'AlertInfo';
-        $this->BlockTypes['w'][] = 'AlertWarning';
-	}
+        // Identify alerts before definition list.
+        array_unshift($this->BlockTypes[':'], 'Alert');
+    }
+    
+    // Icon
 
 	protected function InlineIcon($excerpt)
 	{
-        if (preg_match('/icon\[(.+?)\]/', $excerpt['text'], $matches)) 
+        if (preg_match('/\[icon:(.+?)\]/', $excerpt['text'], $matches)) 
         {
             return array(
                 // How many characters to advance the Parsedown's
@@ -47,24 +48,41 @@ class BeamParsedown extends ParsedownExtra
                 'element' => array(
                     'name' => 'i',
                     'attributes' => array(
-                        'class' => $matches[1],
+                        'class' => trim($matches[1]),
                     ),
                     'rawHtml' => '',
                 ),
             );
         }
     }
-    
-    protected function BlockAlertInfo($line, $block)
+
+    // Alerts
+
+    protected $alert_types = array(
+        'info' => array(
+            'container-class' => 'bg-indigo-100 rounded shadow-sm flex overflow-hidden',
+            'icon-bg-class' => 'bg-indigo-500 w-20 flex justify-center items-center',
+            'icon-class' => 'fa fa-info-circle fa-2x text-white',
+        ),
+        'warning' => array(
+            'container-class' => 'bg-yellow-50 rounded shadow-sm flex overflow-hidden',
+            'icon-bg-class' => 'bg-yellow-300 w-20 flex justify-center items-center',
+            'icon-class' => 'fa fa-exclamation-triangle fa-2x',
+        )
+    );
+
+    protected function BlockAlert($line, $block)
     {
-        if (preg_match('/^info```/', $line['text'], $matches))
+        $types = implode('|', array_keys($this->alert_types));
+        if (preg_match('/^:::(' . $types . ')/', $line['text'], $matches))
         {
+            $type = trim($matches[1]);
             return array(
                 'char' => $line['text'][0],
                 'element' => array(
                     'name' => 'div',
                     'attributes' => array(
-                        'class' => 'bg-indigo-100 rounded shadow-sm flex overflow-hidden',
+                        'class' => $this->alert_types[$type]['container-class'],
                         'role' => 'alert',
                     ),
                     'handler' => 'elements',
@@ -72,13 +90,13 @@ class BeamParsedown extends ParsedownExtra
                         array(
                             'name' => 'div',
                             'attributes' => array(
-                                'class' => 'bg-indigo-500 w-20 flex justify-center items-center'
+                                'class' => $this->alert_types[$type]['icon-bg-class']
                             ),
                             'handler' => 'element',
                             'text' => array(
                                 'name' => 'i',
                                 'attributes' => array(
-                                    'class' => 'fa fa-info-circle fa-2x text-white',
+                                    'class' => $this->alert_types[$type]['icon-class'],
                                 ),
                                 'rawHtml' => ''
                             ),
@@ -97,7 +115,7 @@ class BeamParsedown extends ParsedownExtra
         }
     }
 
-    protected function BlockAlertInfoContinue($line, $block)
+    protected function BlockAlertContinue($line, $block)
     {
         if (isset($block['complete']))
         {
@@ -111,7 +129,7 @@ class BeamParsedown extends ParsedownExtra
         }
 
         // Check for end of the block. 
-        if (preg_match('/^info```/', $line['text']))
+        if (preg_match('/^:::/', $line['text']))
         {
             $block['complete'] = true;
             return $block;
@@ -122,82 +140,12 @@ class BeamParsedown extends ParsedownExtra
         return $block;
     }
 
-    protected function BlockAlertInfoComplete($block)
+    protected function BlockAlertComplete($block)
     {
         return $block;
     }
     
-    protected function BlockAlertWarning($line, $block)
-    {
-        if (preg_match('/^warning```/', $line['text'], $matches))
-        {
-            return array(
-                'char' => $line['text'][0],
-                'element' => array(
-                    'name' => 'div',
-                    'attributes' => array(
-                        'class' => 'bg-yellow-50 rounded shadow-sm flex overflow-hidden',
-                        'role' => 'alert',
-                    ),
-                    'handler' => 'elements',
-                    'text' => array(
-                        array(
-                            'name' => 'div',
-                            'attributes' => array(
-                                'class' => 'bg-yellow-300 w-20 flex justify-center items-center'
-                            ),
-                            'handler' => 'element',
-                            'text' => array(
-                                'name' => 'i',
-                                'attributes' => array(
-                                    'class' => 'fa fa-exclamation-triangle fa-2x',
-                                ),
-                                'rawHtml' => '',
-                            ),
-                        ),
-                        array(
-                            'name' => 'div',
-                            'attributes' => array(
-                                'class' => 'flex-1 px-4',
-                            ),
-                            'handler' => 'lines',
-                            'text' => array(),
-                        )
-                    ),
-                ),
-            );
-        }
-    }
-
-    protected function BlockAlertWarningContinue($line, $block)
-    {
-        if (isset($block['complete']))
-        {
-            return;
-        }
-
-        // A blank newline has occurred.
-        if (isset($block['interrupted']))
-        {
-            unset($block['interrupted']);
-        }
-
-        // Check for end of the block. 
-        if (preg_match('/^warning```/', $line['text']))
-        {
-            $block['complete'] = true;
-            return $block;
-        }
-        
-        $block['element']['text'][1]['text'][] = $line['body'];
-        
-        return $block;
-    }
-
-    protected function BlockAlertWarningComplete($block)
-    {
-        return $block;
-    }
+    // Base image path.
 
     protected $baseImagePath = '';
 
