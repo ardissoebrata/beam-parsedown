@@ -64,7 +64,7 @@ class BeamParsedown extends ParsedownExtra
                 'element' => array(
                     'name' => 'div',
                     'attributes' => array(
-                        'class' => 'm-alert m-alert--icon m-alert--icon-solid m-alert--outline alert alert-info',
+                        'class' => 'bg-indigo-100 rounded shadow-sm flex overflow-hidden',
                         'role' => 'alert',
                     ),
                     'handler' => 'elements',
@@ -72,13 +72,13 @@ class BeamParsedown extends ParsedownExtra
                         array(
                             'name' => 'div',
                             'attributes' => array(
-                                'class' => 'm-alert__icon'
+                                'class' => 'bg-indigo-500 w-20 flex justify-center items-center'
                             ),
                             'handler' => 'element',
                             'text' => array(
                                 'name' => 'i',
                                 'attributes' => array(
-                                    'class' => 'fa fa-info-circle',
+                                    'class' => 'fa fa-info-circle fa-2x text-white',
                                 ),
                                 'rawHtml' => ''
                             ),
@@ -86,7 +86,7 @@ class BeamParsedown extends ParsedownExtra
                         array(
                             'name' => 'div',
                             'attributes' => array(
-                                'class' => 'm-alert__text',
+                                'class' => 'flex-1 px-4',
                             ),
                             'handler' => 'lines',
                             'text' => array(),
@@ -136,7 +136,7 @@ class BeamParsedown extends ParsedownExtra
                 'element' => array(
                     'name' => 'div',
                     'attributes' => array(
-                        'class' => 'm-alert m-alert--icon m-alert--icon-solid m-alert--outline alert alert-warning',
+                        'class' => 'bg-yellow-50 rounded shadow-sm flex overflow-hidden',
                         'role' => 'alert',
                     ),
                     'handler' => 'elements',
@@ -144,13 +144,13 @@ class BeamParsedown extends ParsedownExtra
                         array(
                             'name' => 'div',
                             'attributes' => array(
-                                'class' => 'm-alert__icon'
+                                'class' => 'bg-yellow-300 w-20 flex justify-center items-center'
                             ),
                             'handler' => 'element',
                             'text' => array(
                                 'name' => 'i',
                                 'attributes' => array(
-                                    'class' => 'fa fa-exclamation-triangle',
+                                    'class' => 'fa fa-exclamation-triangle fa-2x',
                                 ),
                                 'rawHtml' => '',
                             ),
@@ -158,7 +158,7 @@ class BeamParsedown extends ParsedownExtra
                         array(
                             'name' => 'div',
                             'attributes' => array(
-                                'class' => 'm-alert__text',
+                                'class' => 'flex-1 px-4',
                             ),
                             'handler' => 'lines',
                             'text' => array(),
