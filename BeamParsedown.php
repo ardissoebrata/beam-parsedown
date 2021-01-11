@@ -49,6 +49,7 @@ class BeamParsedown extends ParsedownExtra
                     'attributes' => array(
                         'class' => $matches[1],
                     ),
+                    'rawHtml' => '',
                 ),
             );
         }
@@ -79,6 +80,7 @@ class BeamParsedown extends ParsedownExtra
                                 'attributes' => array(
                                     'class' => 'fa fa-info-circle',
                                 ),
+                                'rawHtml' => ''
                             ),
                         ),
                         array(
@@ -150,6 +152,7 @@ class BeamParsedown extends ParsedownExtra
                                 'attributes' => array(
                                     'class' => 'fa fa-exclamation-triangle',
                                 ),
+                                'rawHtml' => '',
                             ),
                         ),
                         array(
