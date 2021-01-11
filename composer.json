@@ -23,7 +23,8 @@
     },
     "autoload-dev": {
         "psr-0": {
-            "TestBeamParsedown": "test/"
+            "TestBeamParsedown": "test/",
+            "BeamParsedownTest": "test/"
         }
     }
 }
