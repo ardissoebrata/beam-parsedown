@@ -29,10 +29,34 @@ class BeamParsedown extends ParsedownExtra
 			throw new Exception('BeamParsedown requires a later version of ParsedownExtra');
 		}
 
-		$this->InlineTypes['['][] = 'Icon';
+        $this->InlineTypes['['][] = 'Icon';
+        $this->InlineTypes['['][] = 'Audio';
 
         // Identify alerts before definition list.
         array_unshift($this->BlockTypes[':'], 'Alert');
+    }
+
+    // Base path.
+
+    protected $basePath = '';
+
+    public function setBasePath($url)
+    {
+        $this->basePath = $url;
+    }
+
+    protected function inlineImage($excerpt)
+    {
+        $image = parent::inlineImage($excerpt);
+
+        if ( ! isset($image))
+        {
+            return null;
+        }
+
+        $image['element']['attributes']['src'] = $this->basePath . '/' . $image['element']['attributes']['src'];
+
+        return $image;
     }
     
     // Icon
@@ -51,6 +75,34 @@ class BeamParsedown extends ParsedownExtra
                         'class' => trim($matches[1]),
                     ),
                     'rawHtml' => '',
+                ),
+            );
+        }
+    }
+
+    // Audio
+
+    protected function InlineAudio($excerpt)
+    {
+        if (preg_match('/\[audio:(.+?)\]/', $excerpt['text'], $matches)) 
+        {
+            return array(
+                // How many characters to advance the Parsedown's
+                // cursor after being done processing this tag.
+                'extent' => strlen($matches[0]), 
+                'element' => array(
+                    'name' => 'audio',
+                    'attributes' => array(
+                        'controls' => '',
+                        'preload' => 'none',
+                    ),
+                    'handler' => 'element',
+                    'text' => array(
+                        'name' => 'source',
+                        'attributes' => array(
+                            'src' => $this->basePath . '/' . trim($matches[1]),
+                        )
+                    ),
                 ),
             );
         }
@@ -143,28 +195,5 @@ class BeamParsedown extends ParsedownExtra
     protected function BlockAlertComplete($block)
     {
         return $block;
-    }
-    
-    // Base image path.
-
-    protected $baseImagePath = '';
-
-    public function setBaseImagePath($url)
-    {
-        $this->baseImagePath = $url;
-    }
-
-    protected function inlineImage($excerpt)
-    {
-        $image = parent::inlineImage($excerpt);
-
-        if ( ! isset($image))
-        {
-            return null;
-        }
-
-        $image['element']['attributes']['src'] = $this->baseImagePath . '/' . $image['element']['attributes']['src'];
-
-        return $image;
     }
 }
