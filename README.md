@@ -41,7 +41,7 @@ The MIT License (MIT). Please see the [license file](license.md) for more inform
 
 [ico-version]: https://img.shields.io/packagist/v/ardissoebrata/beam-parsedown.svg?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/ardissoebrata/beam-parsedown.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/ardissoebrata/beam-parsedown/master.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/com/ardissoebrata/beam-parsedown/master.svg?style=flat-square
 
 [link-packagist]: https://packagist.org/packages/ardissoebrata/beam-parsedown
 [link-downloads]: https://packagist.org/packages/ardissoebrata/beam-parsedown
