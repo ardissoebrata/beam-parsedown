@@ -45,6 +45,6 @@ The MIT License (MIT). Please see the [license file](license.md) for more inform
 
 [link-packagist]: https://packagist.org/packages/ardissoebrata/beam-parsedown
 [link-downloads]: https://packagist.org/packages/ardissoebrata/beam-parsedown
-[link-travis]: https://travis-ci.org/ardissoebrata/beam-parsedown
+[link-travis]: https://travis-ci.com/ardissoebrata/beam-parsedown
 [link-author]: https://github.com/ardissoebrata
 [link-contributors]: ../../contributors
