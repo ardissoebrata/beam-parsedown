@@ -1,14 +1,23 @@
 language: php
 
-matrix:
-  include:
-    - php: 7.3
-      dist: bionic
-    - php: 7.4
-      dist: bionic
+php:
+  - 7.3
+  - 7.4
 
-install:
-  - composer install --prefer-dist --no-interaction --no-progress
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+# Using Testbench you can test for different Laravel versions.
+# The settings below test on each PHP version with Laravel 7 and 8.
+env:
+  - TESTBENCH_VERSION=5.*
+  - TESTBENCH_VERSION=6.*
+
+before_script:
+  - travis_retry composer self-update
+  - travis_retry composer require "orchestra/testbench:${TESTBENCH_VERSION}" --no-update
+  - travis_retry composer update --no-interaction --prefer-source
 
 script:
-  - vendor/bin/phpunit
+  - phpunit --coverage-text

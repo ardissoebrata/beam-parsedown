@@ -1,16 +1,16 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+namespace ArdiSSoebrata\BeamParsedown\Tests;
 
-class BeamParsedownTest extends TestCase
+use ArdiSSoebrata\BeamParsedown\Facades\BeamParsedown;
+
+class BeamParsedownTest extends TestbenchTestCase
 {
     private $dirs;
-	protected $Parsedown;
 	
     final function __construct($name = null, array $data = array(), $dataName = '')
     {
         $this->dirs = $this->initDirs();
-        $this->Parsedown = $this->initParsedown();
 
         parent::__construct($name, $data, $dataName);
     }
@@ -24,16 +24,6 @@ class BeamParsedownTest extends TestCase
 
         return $dirs;
     }
-
-    /**
-     * @return BeamParsedown
-     */
-    protected function initParsedown()
-    {
-        $Parsedown = new TestBeamParsedown();
-
-        return $Parsedown;
-	}
 	
     /**
      * @dataProvider data
@@ -49,7 +39,7 @@ class BeamParsedownTest extends TestCase
         $expectedMarkup = str_replace("\r\n", "\n", $expectedMarkup);
 		$expectedMarkup = str_replace("\r", "\n", $expectedMarkup);
 
-        $actualMarkup = $this->Parsedown->text($markdown);
+        $actualMarkup = BeamParsedown::text($markdown);
 
         $this->assertEquals($expectedMarkup, $actualMarkup);
 	}
@@ -60,7 +50,7 @@ class BeamParsedownTest extends TestCase
 
         foreach ($this->dirs as $dir)
         {
-            $Folder = new DirectoryIterator($dir);
+            $Folder = new \DirectoryIterator($dir);
 
             foreach ($Folder as $File)
             {

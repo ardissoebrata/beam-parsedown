@@ -16,6 +16,10 @@
 #
 #
 
+namespace ArdiSSoebrata\BeamParsedown;
+
+use ParsedownExtra;
+
 class BeamParsedown extends ParsedownExtra
 {
 	const version = '0.0.1';
@@ -43,6 +47,7 @@ class BeamParsedown extends ParsedownExtra
     public function setBasePath($url)
     {
         $this->basePath = $url;
+        return $this;
     }
 
     protected function inlineImage($excerpt)
