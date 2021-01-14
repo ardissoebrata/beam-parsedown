@@ -35,7 +35,15 @@ class BeamParsedownServiceProvider extends ServiceProvider
 
         // Register the service the package provides.
         $this->app->singleton('beam-parsedown', function ($app) {
-            return new BeamParsedown();
+            $parse = new BeamParsedown();
+            
+            // Set from config.
+            $parse->setBreaksEnabled(config('beam-parsedown.breaks_enabled', false));
+            $parse->setMarkupEscaped(config('beam-parsedown.markup_escaped', false));
+            $parse->setUrlsLinked(config('beam-parsedown.urls_linked', true));
+            $parse->setSafeMode(config('beam-parsedown.safe_mode', false));
+
+            return $parse;
         });
     }
 
