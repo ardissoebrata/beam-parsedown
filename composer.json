@@ -27,6 +27,10 @@
             "ArdiSSoebrata\\BeamParsedown\\Tests\\": "tests"
         }
     },
+    "scripts": {
+        "test": "phpunit --colors=always",
+        "test-coverage": "phpunit --coverage-html coverage"
+    },
     "extra": {
         "laravel": {
             "providers": [
