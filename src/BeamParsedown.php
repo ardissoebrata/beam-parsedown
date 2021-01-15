@@ -28,10 +28,12 @@ class BeamParsedown extends ParsedownExtra
     {
         parent::__construct();
 
+        // @codeCoverageIgnoreStart
 		if (version_compare(parent::version, '0.8.1') < 0)
 		{
 			throw new Exception('BeamParsedown requires a later version of ParsedownExtra');
-		}
+        }
+        // @codeCoverageIgnoreEnd
 
         $this->InlineTypes['['][] = 'Icon';
         $this->InlineTypes['['][] = 'Audio';

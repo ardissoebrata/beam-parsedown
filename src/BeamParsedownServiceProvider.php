@@ -54,7 +54,9 @@ class BeamParsedownServiceProvider extends ServiceProvider
      */
     public function provides()
     {
+        // @codeCoverageIgnoreStart
         return ['beam-parsedown'];
+        // @codeCoverageIgnoreEnd
     }
 
     /**
