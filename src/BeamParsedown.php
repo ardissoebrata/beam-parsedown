@@ -41,6 +41,8 @@ class BeamParsedown extends ParsedownExtra
 
         // Identify alerts before definition list.
         array_unshift($this->BlockTypes[':'], 'Alert');
+        // Identify youtube block before Reference.
+        array_unshift($this->BlockTypes['['], 'Youtube');
     }
 
     // Base path.
@@ -120,6 +122,40 @@ class BeamParsedown extends ParsedownExtra
                         'attributes' => array(
                             'src' => $src,
                         )
+                    ),
+                ),
+            );
+        }
+    }
+
+    // Youtube
+    
+    protected function BlockYoutube($excerpt)
+    {
+        if (preg_match('/\[youtube:\s*https\:\/\/youtu\.be\/(.+?)\]/', $excerpt['text'], $matches)) 
+        {
+            $video_id = trim($matches[1]);
+            return array(
+                // How many characters to advance the Parsedown's
+                // cursor after being done processing this tag.
+                'extent' => strlen($matches[0]), 
+                'element' => array(
+                    'name' => 'div',
+                    'attributes' => array(
+                        'class' => 'overflow-hidden relative h-0',
+                        'style' => 'padding-bottom: 56.25%',
+                    ),
+                    'handler' => 'element',
+                    'text' => array(
+                        'name' => 'iframe',
+                        'attributes' => array(
+                            'src' => 'https://www.youtube.com/embed/' . $video_id,
+                            'frameborder' => '0',
+                            'allow' => 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture',
+                            'allowfullscreen' => '',
+                            'class' => 'left-0 top-0 h-full w-full absolute',
+                        ),
+                        'rawHtml' => '',
                     ),
                 ),
             );
