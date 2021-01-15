@@ -22,7 +22,8 @@ use ParsedownExtra;
 
 class BeamParsedown extends ParsedownExtra
 {
-	const version = '0.0.1';
+    const version = '0.0.1';
+    protected $isUrlRegex = "/(https?|ftp)\:\/\//i";
 	
     function __construct()
     {
@@ -48,7 +49,7 @@ class BeamParsedown extends ParsedownExtra
 
     public function setBasePath($url)
     {
-        $this->basePath = $url;
+        $this->basePath = preg_replace('{/$}', '', $url) . '/';
         return $this;
     }
 
@@ -61,7 +62,11 @@ class BeamParsedown extends ParsedownExtra
             return null;
         }
 
-        $image['element']['attributes']['src'] = $this->basePath . '/' . $image['element']['attributes']['src'];
+        // Add basePath if src is relative.
+        $src = $image['element']['attributes']['src'];
+        if (!preg_match($this->isUrlRegex, $src, $urlmatch)) {
+            $image['element']['attributes']['src'] = $this->basePath . $src;
+        }
 
         return $image;
     }
@@ -93,6 +98,12 @@ class BeamParsedown extends ParsedownExtra
     {
         if (preg_match('/\[audio:(.+?)\]/', $excerpt['text'], $matches)) 
         {
+            // Add basePath if src is relative.
+            $src = trim($matches[1]);
+            if (!preg_match($this->isUrlRegex, $src, $urlmatch)) {
+                $src = $this->basePath . $src;
+            }
+
             return array(
                 // How many characters to advance the Parsedown's
                 // cursor after being done processing this tag.
@@ -107,7 +118,7 @@ class BeamParsedown extends ParsedownExtra
                     'text' => array(
                         'name' => 'source',
                         'attributes' => array(
-                            'src' => $this->basePath . '/' . trim($matches[1]),
+                            'src' => $src,
                         )
                     ),
                 ),

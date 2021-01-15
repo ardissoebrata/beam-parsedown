@@ -84,9 +84,18 @@ class BeamParsedownTest extends TestbenchTestCase
 
     public function testSetBasePath()
     {
-        BeamParsedown::setBasePath('http://example.com');
+        BeamParsedown::setBasePath('http://example.com/');
         $markdown = '![sample image](sample.jpg)';
         $expectedMarkup = '<p><img src="http://example.com/sample.jpg" alt="sample image" /></p>';
+        $actualMarkup = BeamParsedown::text($markdown);
+        $this->assertEquals($expectedMarkup, $actualMarkup);
+    }
+
+    public function testSetBasePathOnlyRelative()
+    {
+        BeamParsedown::setBasePath('http://example.com/');
+        $markdown = '![sample image](http://other.com/sample.jpg)';
+        $expectedMarkup = '<p><img src="http://other.com/sample.jpg" alt="sample image" /></p>';
         $actualMarkup = BeamParsedown::text($markdown);
         $this->assertEquals($expectedMarkup, $actualMarkup);
     }
