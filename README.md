@@ -2,7 +2,7 @@
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Total Downloads][ico-downloads]][link-downloads]
-[![Build Status][ico-travis]][link-travis]
+![Test](https://github.com/ardissoebrata/beam-parsedown/workflows/Test/badge.svg)
 
 This is where your description should go. Take a look at [contributing.md](contributing.md) to see a to do list.
 
@@ -15,6 +15,16 @@ $ composer require ardissoebrata/beam-parsedown
 ```
 
 ## Usage
+
+
+
+### Configuration
+
+To add new or edit the default options, run the following command to make a copy of the default configuration file:
+
+``` bash
+php artisan vendor:publish --tag=beam-parsedown.config --force
+```
 
 ## Change log
 
