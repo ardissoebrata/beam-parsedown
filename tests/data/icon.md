@@ -14,4 +14,4 @@ The icon size is displayed according to the context of the icon's position. The 
 
 # [icon: fa fa-home] Home
 
-## [icon: fa fa-home] Home 2
+## [icon: fa fa-home] Home 2 {.main .shine #the-site lang=fr}

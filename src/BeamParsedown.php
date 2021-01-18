@@ -24,6 +24,7 @@ class BeamParsedown extends ParsedownExtra
 {
     const version = '0.0.1';
     protected $isUrlRegex = "/(https?|ftp)\:\/\//i";
+    protected $regexAttribute = '(?:([#.][\w-]+\s*)|([\w-]+=[\w-]+\s*))+';
 	
     function __construct()
     {
@@ -71,6 +72,95 @@ class BeamParsedown extends ParsedownExtra
         }
 
         return $image;
+    }
+
+    // Heading id & attributes.
+
+    protected function blockHeader($Line)
+    {
+        $Block = parent::blockHeader($Line);
+
+        if (! isset($Block)) {
+            return null;
+        }
+
+        if (!isset($Block['element']['attributes']['id'])) {
+            $text = $Block['element']['text'];
+            $text = preg_replace('/(\[.+:.*\]\s)/', '', $text);         // remove [tag: value]. Ex. [icon: fa fa-home].
+            $Block['element']['attributes']['id'] = $this->slugify($text);
+        }
+
+        return $Block;
+    }
+
+    protected function blockSetextHeader($Line, array $Block = null)
+    {
+        $Block = parent::blockSetextHeader($Line, $Block);
+
+        if (!isset($Block['element']['attributes']['id'])) {
+            $text = $Block['element']['text'];
+            $text = preg_replace('/(\[.+:.*\]\s)/', '', $text);         // remove [tag: value]. Ex. [icon: fa fa-home].
+            $Block['element']['attributes']['id'] = $this->slugify($text);
+        }
+
+        return $Block;
+    }
+
+    protected function parseAttributeData($attributeString)
+    {
+        $Data = array();
+
+        $attributes = preg_split('/[ ]+/', $attributeString, - 1, PREG_SPLIT_NO_EMPTY);
+
+        foreach ($attributes as $attribute)
+        {
+            if ($attribute[0] === '#')
+            {
+                $Data['id'] = substr($attribute, 1);
+            }
+            elseif ($attribute[0] === '.')
+            {
+                $classes []= substr($attribute, 1);
+            }
+            elseif (preg_match('/([\w-]+)=([\w-]+)/', $attribute, $match))
+            {
+                $Data[$match[1]] = $match[2];
+            }
+        }
+
+        if (isset($classes))
+        {
+            $Data['class'] = implode(' ', $classes);
+        }
+
+        return $Data;
+    }
+
+    public static function slugify($text)
+    {
+        // replace non letter or digits by -
+        $text = preg_replace('~[^\pL\d]+~u', '-', $text);
+
+        // transliterate
+        $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+
+        // remove unwanted characters
+        $text = preg_replace('~[^-\w]+~', '', $text);
+
+        // trim
+        $text = trim($text, '-');
+
+        // remove duplicate -
+        $text = preg_replace('~-+~', '-', $text);
+
+        // lowercase
+        $text = strtolower($text);
+
+        if (empty($text)) {
+            return 'n-a';
+        }
+
+        return $text;
     }
     
     // Icon
