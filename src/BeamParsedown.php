@@ -44,6 +44,8 @@ class BeamParsedown extends ParsedownExtra
         array_unshift($this->BlockTypes[':'], 'Alert');
         // Identify youtube block before Reference.
         array_unshift($this->BlockTypes['['], 'Youtube');
+        // Identify drawio block before Reference.
+        array_unshift($this->BlockTypes['['], 'Drawio');
     }
 
     // Base path.
@@ -339,5 +341,52 @@ class BeamParsedown extends ParsedownExtra
     protected function BlockAlertComplete($block)
     {
         return $block;
+    }
+    
+    // draw.io
+    
+    protected function BlockDrawio($excerpt)
+    {
+        if (preg_match('/\[drawio:\s*(.+?)\]/', $excerpt['text'], $matches)) 
+        {
+            $file = trim($matches[1]);
+            if (!preg_match($this->isUrlRegex, $file, $urlmatch)) {
+                $file = $this->basePath . $file;
+            }
+            return array(
+                // How many characters to advance the Parsedown's
+                // cursor after being done processing this tag.
+                'extent' => strlen($matches[0]), 
+                'element' => array(
+                    'name' => 'div',
+                    'handler' => 'elements',
+                    'text' => array(
+                        array(
+                            'name' => 'div',
+                            'attributes' => array(
+                                'class' => 'mxgraph w-full border',
+                                'data-mxgraph' => json_encode(array(
+                                    'highlight' => '#0000ff',
+                                    'target' => 'blank',
+                                    'nav' => true,
+                                    'resize' => true,
+                                    'toolbar' => 'zoom layers lightbox',
+                                    'url' => $file,
+                                ))
+                            ),
+                            'rawHtml' => '',
+                        ),
+                        array(
+                            'name' => 'script',
+                            'attributes' => array(
+                                'type' => 'text/javascript',
+                                'src' => 'https://viewer.diagrams.net/js/viewer-static.min.js'
+                            ),
+                            'rawHtml' => '',
+                        ),
+                    ),
+                ),
+            );
+        }
     }
 }

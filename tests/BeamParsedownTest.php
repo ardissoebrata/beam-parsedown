@@ -39,7 +39,7 @@ class BeamParsedownTest extends TestbenchTestCase
         $expectedMarkup = str_replace("\r\n", "\n", $expectedMarkup);
 		$expectedMarkup = str_replace("\r", "\n", $expectedMarkup);
 
-        $actualMarkup = BeamParsedown::text($markdown);
+        $actualMarkup = BeamParsedown::setBasePath('http://example.test/data/')->text($markdown);
 
         $this->assertEquals($expectedMarkup, $actualMarkup);
 	}
