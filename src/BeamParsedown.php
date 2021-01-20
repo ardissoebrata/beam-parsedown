@@ -43,6 +43,7 @@ class BeamParsedown extends ParsedownExtra
         // Identify our blocks before definition list.
         array_unshift($this->BlockTypes[':'], 'Alert');
         array_unshift($this->BlockTypes[':'], 'Mermaid');
+        array_unshift($this->BlockTypes[':'], 'Chart');
         // Identify our blocks before Reference.
         array_unshift($this->BlockTypes['['], 'Youtube');
         array_unshift($this->BlockTypes['['], 'Drawio');
@@ -435,6 +436,55 @@ class BeamParsedown extends ParsedownExtra
     }
     
     protected function BlockMermaidComplete($block)
+    {
+        return $block;
+    }
+    
+    // Chart JS
+
+    protected function BlockChart($line, $block)
+    {
+        if (preg_match('/^:::\s*chart/', $line['text'], $matches))
+        {
+            return array(
+                'char' => $line['text'][0],
+                'element' => array(
+                    'name' => 'canvas',
+                    'attributes' => array(
+                        'class' => 'chartjs',
+                    ),
+                    'rawHtml' => "\n",
+                ),
+            );
+        }
+    }
+
+    protected function BlockChartContinue($line, $block)
+    {
+        if (isset($block['complete']))
+        {
+            return;
+        }
+
+        // A blank newline has occurred.
+        if (isset($block['interrupted']))
+        {
+            unset($block['interrupted']);
+        }
+
+        // Check for end of the block. 
+        if (preg_match('/^:::/', $line['text']))
+        {
+            $block['complete'] = true;
+            return $block;
+        }
+        
+        $block['element']['rawHtml'] .= $line['body'] . "\n";
+        
+        return $block;
+    }
+    
+    protected function BlockChartComplete($block)
     {
         return $block;
     }
