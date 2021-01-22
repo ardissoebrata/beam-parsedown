@@ -48,6 +48,10 @@ Chart js example:
       }
     ]
   },
-  "options": {}
+  "options": {
+    
+  }
 }
 :::
+
+That's it.

@@ -10,6 +10,7 @@ graph TD
 
 And here is another:
 :::mermaid
+
 graph TD
     A[Client] -->|tcp_123| B(Load Balancer)
     B -->|tcp_456| C[Server1]
