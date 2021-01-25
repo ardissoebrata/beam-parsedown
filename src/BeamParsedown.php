@@ -100,7 +100,7 @@ class BeamParsedown extends ParsedownExtra
     {
         $Block = parent::blockSetextHeader($Line, $Block);
 
-        if (!isset($Block['element']['attributes']['id'])) {
+        if (isset($Block['element']) && !isset($Block['element']['attributes']['id'])) {
             $text = $Block['element']['text'];
             $text = preg_replace('/(\[.+:.*\]\s)/', '', $text);         // remove [tag: value]. Ex. [icon: fa fa-home].
             $Block['element']['attributes']['id'] = $this->slugify($text);
